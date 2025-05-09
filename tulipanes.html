@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tulipanes para Nancy</title>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(45deg, #f0f9ff 0%, #ffffff 50%, #fff0f5 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .message {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: appear 1s ease forwards 1s;
+        }
+
+        .tulip-container {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tulip {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .tulip:hover {
+            transform: translateY(-15px) scale(1.1);
+        }
+
+        .tulip:hover .flower {
+            filter: brightness(1.2);
+        }
+
+        .tulip:hover::after {
+            content: '✨';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            animation: sparkle 1s infinite;
+        }
+
+        .stem {
+            width: 8px;
+            height: 120px;
+            background: linear-gradient(to right, #3a9d23, #4CAF50);
+            margin: 0 auto;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        .flower {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(45deg, var(--tulip-color), var(--tulip-color-light));
+            border-radius: 50% 50% 0 0;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .flower::before,
+        .flower::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            opacity: 0.7;
+        }
+
+        .flower::before {
+            transform: rotate(-30deg);
+            left: -20%;
+        }
+
+        .flower::after {
+            transform: rotate(30deg);
+            right: -20%;
+        }
+
+        .leaf {
+            width: 35px;
+            height: 20px;
+            background: linear-gradient(to right, #3a9d23, #4CAF50);
+            position: absolute;
+            border-radius: 0 50% 50% 0;
+            left: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaf:nth-child(1) {
+            top: 30px;
+            transform: rotate(-5deg);
+        }
+
+        .leaf:nth-child(2) {
+            top: 60px;
+            transform: scaleX(-1) rotate(-5deg);
+            left: -35px;
+        }
+
+        .leaf:nth-child(3) {
+            top: 90px;
+            transform: rotate(5deg);
+        }
+
+        .ribbon {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 40px;
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        .hearts {
+            position: absolute;
+            font-size: 1.5em;
+            color: #ff69b4;
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="message">Para ti mi preciosa🌷</h1>
+        <p class="subtitle">Florecitas para ti mi amor</p>
+        <div class="tulip-container" id="tulipContainer">
+            <div class="ribbon"></div>
+        </div>
+    </div>
+
+    <script>
+        function createTulip() {
+            const tulip = document.createElement('div');
+            tulip.className = 'tulip';
+            
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            
+            const stem = document.createElement('div');
+            stem.className = 'stem';
+            
+            // Adding three leaves for more detail
+            for (let i = 0; i < 3; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                stem.appendChild(leaf);
+            }
+            
+            tulip.appendChild(flower);
+            tulip.appendChild(stem);
+            
+            return tulip;
+        }
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'hearts';
+            heart.textContent = '♥';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.querySelector('.container').appendChild(heart);
+        }
+
+        const container = document.getElementById('tulipContainer');
+        const colors = [
+            { main: '#FF69B4', light: '#FFB6C1' },
+            { main: '#FF1493', light: '#FF69B4' },
+            { main: '#DB7093', light: '#FFA07A' },
+            { main: '#FF69B4', light: '#FFC0CB' },
+            { main: '#FF1493', light: '#FFB6C1' },
+            { main: '#C71585', light: '#DB7093' },
+            { main: '#FF69B4', light: '#FFA07A' }
+        ];
+        
+        // Create 7 tulips
+        for (let i = 0; i < 7; i++) {
+            const tulip = createTulip();
+            const flower = tulip.querySelector('.flower');
+            flower.style.setProperty('--tulip-color', colors[i].main);
+            flower.style.setProperty('--tulip-color-light', colors[i].light);
+            
+            // Add animation delay for each tulip
+            tulip.style.animation = `appear 0.5s ease ${i * 0.2}s both`;
+            container.appendChild(tulip);
+        }
+
+        // Add floating hearts around the bouquet
+        for (let i = 0; i < 10; i++) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createHeart(x, y);
+        }
+
+        // Add hover sound effect
+        const tulips = document.querySelectorAll('.tulip');
+        tulips.forEach(tulip => {
+            tulip.addEventListener('mouseenter', () => {
+                const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+                audio.volume = 0.1;
+                audio.play().catch(() => {}); // Ignore errors if audio can't play
+            });
+        });
+    </script>
+</body>
+</html>
